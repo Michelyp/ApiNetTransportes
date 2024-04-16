@@ -62,6 +62,7 @@
 
 #endregion
 using ApiNetTransportes.Data;
+using ApiNetTransportes.Helpers;
 using ApiNetTransportes.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -71,9 +72,12 @@ namespace ApiNetTransportes.Repositories
     public class RepositoryCoches
     {
         private TransportesContext context;
-        public RepositoryCoches(TransportesContext context)
+        private HelperUploadFiles helperUploadFiles;
+        public RepositoryCoches(TransportesContext context, HelperUploadFiles helperUploadFiles)
         {
             this.context = context;
+            this.helperUploadFiles = helperUploadFiles;
+
         }
         #region COCHES
         public async Task<List<CocheVista>> GetCoches()
