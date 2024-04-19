@@ -36,7 +36,7 @@ namespace ApiNetTransportes.Controllers
         /// <response code="401">NotAuthorized. No autorizado, sin Token válido.</response>
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> Login(LoginModel model )
+        public async Task<ActionResult> Login(LoginModel model )
         {
             Usuario user = await this.repo.LoginUserAsync(model.Email, model.Password);
             if (user == null)
@@ -74,9 +74,10 @@ namespace ApiNetTransportes.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Register(Usuario usuario)
+        [Route("[action]")]
+        public async Task<ActionResult<Usuario>> Register(UsuarioModel usuario)
         {
-           Usuario user=  await this.repo.RegisterUserAsync(usuario);
+           Usuario user=  await this.repo.RegisterUserAsync(usuario.Nombre, usuario.Apellido, usuario.Correo,usuario.Password,usuario.Telefono);
             return user;
         }
     }

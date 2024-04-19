@@ -26,7 +26,7 @@ namespace ApiNetTransportes.Models
             [Column("ASIENTOS")]
             public int Asientos { get; set; }
             [Column("MALETAS")]
-            public int? Maletas { get; set; }
+            public int Maletas { get; set; }
             [Column("PUERTAS")]
             public int Puertas { get; set; }
             [Column("PRECIO")]

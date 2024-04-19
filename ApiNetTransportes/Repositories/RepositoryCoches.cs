@@ -86,17 +86,21 @@ namespace ApiNetTransportes.Repositories
             var consulta = this.context.CocheVistas.FromSqlRaw(sql);
             return await consulta.ToListAsync();
         }
-        public List<Provincia> GetProvincias()
+        public async Task<List<Provincia>> GetProvincias()
         {
-            List<Provincia> provincias = this.context.Provincias.ToList();
+            List<Provincia> provincias = await this.context.Provincias.ToListAsync();
             return provincias;
         }
         public async Task<List<CocheVista>> CochesDispo()
         {
-            List<CocheVista> coches = await this.context.CocheVistas.Where(x => x.EstadoCoche == true).ToListAsync();
-            return coches;
+            return await this.context.CocheVistas.Where(x => x.EstadoCoche == true).ToListAsync();
+             
         }
-        public async Task<CocheVista> FindCoche(int id)
+        public async Task<Coche> FindCoche(int id)
+        {
+            return await this.context.Coches.FirstOrDefaultAsync(z => z.IdCoche.Equals(id));
+        }
+        public async Task<CocheVista> FindCocheVista(int id)
         {
             return await this.context.CocheVistas.Where(z => z.IdCoche.Equals(id)).FirstOrDefaultAsync();
         }
@@ -121,21 +125,22 @@ namespace ApiNetTransportes.Repositories
                 return await this.context.Usuarios.MaxAsync(Z => Z.IdUsuario) + 1;
             }
         }
-        public async Task RegisterUserAsync(Usuario usuario )
+        public async Task<Usuario> RegisterUserAsync(string nombre, string apellido, string email, string password, int telefono)
         {
             Usuario user = new Usuario();
             user.IdUsuario = await this.GetMaxIdUsuarioAsync();
-            user.Nombre = usuario.Nombre;
-            user.Apellido = usuario.Apellido;
-            user.Correo = usuario.Correo;
+            user.Nombre = nombre;
+            user.Apellido = apellido;
+            user.Correo = email;
             user.Salt = HelperTools.GenerateSalt();
-            user.Password = HelperCryptography.EncryptPassword(usuario.Password, user.Salt);
-            user.Telefono = usuario.Telefono;
+            user.Password = HelperCryptography.EncryptPassword(password, user.Salt);
+            user.Telefono = telefono;
             user.IdRol = 2;
             user.IdFacturacion = 1;
             user.EstadoUsuario = 1;
             this.context.Usuarios.Add(user);
             await this.context.SaveChangesAsync();
+            return user;
         }
         public async Task<Usuario> LoginUserAsync(string email, string password)
         {
@@ -235,7 +240,9 @@ namespace ApiNetTransportes.Repositories
             }
         }
 
-        public async Task CrearCocheAsync(int modelo, int? valoracion, int tipomovi, int filtrocoche, IFormFile imagen, int provincia, int asientos, int maletas, int puertas, int precio)
+
+       
+        public async Task CrearCocheAsync(int modelo, int? valoracion, int tipomovi, int filtrocoche, int provincia, int asientos, int maletas, int puertas, int precio)
         {
 
 
@@ -245,7 +252,7 @@ namespace ApiNetTransportes.Repositories
             coche.Puntuacion = valoracion;
             coche.TipoMovilidad = tipomovi;
             coche.Filtro = filtrocoche;
-            coche.Imagen = await this.helperUploadFiles.UploadFileAsync(imagen, Folders.Uploads, coche.IdCoche); ;
+       //     coche.Imagen = await this.helperUploadFiles.UploadFileAsync(, Folders.Uploads, coche.IdCoche); ;
             coche.EstadoCoche = true;
             coche.IdProvincia = provincia;
             coche.Asientos = asientos;
