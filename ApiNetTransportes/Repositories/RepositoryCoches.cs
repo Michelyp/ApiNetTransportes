@@ -64,6 +64,7 @@
 using ApiNetTransportes.Data;
 using ApiNetTransportes.Helpers;
 using ApiNetTransportes.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -242,7 +243,7 @@ namespace ApiNetTransportes.Repositories
 
 
        
-        public async Task CrearCocheAsync(int modelo, int? valoracion, int tipomovi, int filtrocoche, int provincia, int asientos, int maletas, int puertas, int precio)
+        public async Task<Coche> CrearCocheAsync(int modelo, int? valoracion, int tipomovi, int filtrocoche, int provincia, int asientos, int maletas, int puertas, int precio)
         {
 
 
@@ -261,6 +262,7 @@ namespace ApiNetTransportes.Repositories
             coche.Precio = precio;
             this.context.Coches.AddAsync(coche);
             await this.context.SaveChangesAsync();
+            return coche;
         }
         #endregion
         #region RESERVAS
@@ -281,7 +283,7 @@ namespace ApiNetTransportes.Repositories
             var consulta = this.context.ReservasVista.FromSqlRaw(sql);
             return await consulta.ToListAsync();
         }
-        public async Task CrearReservaAsync(string lugar, string conductor, TimeSpan horainit, DateTime fechainit
+        public async Task<Reserva> CrearReservaAsync(string lugar, string conductor, TimeSpan horainit, DateTime fechainit
             , DateTime fechafinal, TimeSpan horafinal, int idcoche, int idusuario)
         {
             Reserva reser = new Reserva();
@@ -297,6 +299,7 @@ namespace ApiNetTransportes.Repositories
             reser.IdEstadpReserva = 1;
             this.context.Reservas.Add(reser);
             await this.context.SaveChangesAsync();
+            return reser;
         }
 
         private async Task<int> GetMaxFacturacionAsync()
@@ -323,10 +326,31 @@ namespace ApiNetTransportes.Repositories
             this.context.Facturaciones.Add(fact);
             await this.context.SaveChangesAsync();
         }
+        [HttpPost
+            ]
+        public async Task<List<ReservaVista>> BuscadorReservas(string buscarReservas)
+        {
+            List<ReservaVista> reservas = await this.context.ReservasVista.Where(x => x.NombreUsuario.Contains(buscarReservas)).ToListAsync();
+
+            return reservas;
+
+        }
         public async Task<ReservaVista> FindReserva(int id)
         {
             return await this.context.ReservasVista.Where(z => z.IdReserva.Equals(id)).FirstOrDefaultAsync();
         }
+        public async Task<Reserva> FindReservaAsync(int id)
+        {
+            return await this.context.Reservas.Where(z => z.IdReserva.Equals(id)).FirstOrDefaultAsync();
+        }
+        public async Task CancelarReservaAsync(int id)
+        {
+            Reserva reserva = await this.context.Reservas.Where(z => z.IdReserva.Equals(id)).FirstOrDefaultAsync();
+            reserva.IdEstadpReserva = 3;
+            await this.context.SaveChangesAsync();
+
+        }
+
 
         public async Task DeleteReservaAsync(int id)
         {

@@ -73,6 +73,16 @@ namespace ApiNetTransportes.Controllers
                     });
             }
         }
+        // POST: api/usuarios
+        /// <summary>
+        /// Crea una nueva USUARIOS en la BBDD, tabla USUARIOS
+        /// </summary>
+        /// <remarks>
+        /// Este método inserta un nuevo USUARIOS enviando el Objeto JSON
+        /// El ID de la charla se genera automáticamente dentro del método
+        /// </remarks>
+        /// <response code="201">Created. Objeto correctamente creado en la BD.</response>        
+        /// <response code="500">BBDD. No se ha creado el objeto en la BD. Error en la BBDD.</response>/// 
         [HttpPost]
         [Route("[action]")]
         public async Task<ActionResult<Usuario>> Register(UsuarioModel usuario)
