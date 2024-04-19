@@ -121,16 +121,16 @@ namespace ApiNetTransportes.Repositories
                 return await this.context.Usuarios.MaxAsync(Z => Z.IdUsuario) + 1;
             }
         }
-        public async Task RegisterUserAsync(string nombre, string apellido, string email, string password, int telefono)
+        public async Task RegisterUserAsync(Usuario usuario )
         {
             Usuario user = new Usuario();
             user.IdUsuario = await this.GetMaxIdUsuarioAsync();
-            user.Nombre = nombre;
-            user.Apellido = apellido;
-            user.Correo = email;
+            user.Nombre = usuario.Nombre;
+            user.Apellido = usuario.Apellido;
+            user.Correo = usuario.Correo;
             user.Salt = HelperTools.GenerateSalt();
-            user.Password = HelperCryptography.EncryptPassword(password, user.Salt);
-            user.Telefono = telefono;
+            user.Password = HelperCryptography.EncryptPassword(usuario.Password, user.Salt);
+            user.Telefono = usuario.Telefono;
             user.IdRol = 2;
             user.IdFacturacion = 1;
             user.EstadoUsuario = 1;
