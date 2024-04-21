@@ -1,5 +1,6 @@
 ﻿using ApiNetTransportes.Models;
 using ApiNetTransportes.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +40,9 @@ namespace ApiNetTransportes.Controllers
         /// <response code="500">BBDD. No se ha creado el objeto en la BD. Error en la BBDD.</response>/// 
 
         [HttpPost]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Coche>> AgregarCoche(Coche coche)
         {
            Coche cocheAgree =  await this.repo.CrearCocheAsync(coche.IdModelo, coche.Puntuacion, coche.TipoMovilidad, coche.Filtro, coche.IdProvincia, coche.Asientos, coche.Maletas,
@@ -77,6 +81,10 @@ namespace ApiNetTransportes.Controllers
         /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>    
         /// <response code="500">BBDD. No se ha eliminado el objeto en la BD. Error en la BBDD.</response>/// 
         [HttpDelete("{id}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteCoche(int id)
         {
             var coche = await this.repo.FindCoche(id);

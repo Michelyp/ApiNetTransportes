@@ -60,5 +60,21 @@ namespace ApiNetTransportes.Helpers
                 });
             return authoptions;
         }
+
+        //METODO PARA VALIDAR LA AUTENTIFICACION
+        public Action<AuthenticationOptions> GetAuthOptions()
+        {
+            Action<AuthenticationOptions> authoptions =
+                new Action<AuthenticationOptions>(options =>
+                {
+                    options.DefaultAuthenticateScheme
+                    = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+                });
+            return authoptions;
+        }
     }
 }

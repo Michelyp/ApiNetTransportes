@@ -1,5 +1,6 @@
 ﻿using ApiNetTransportes.Models;
 using ApiNetTransportes.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -40,7 +41,9 @@ namespace ApiNetTransportes.Controllers
         /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>
         /// <response code="500">BBDD. No se ha creado el objeto en la BD. Error en la BBDD.</response>/// 
         [HttpPut]
+        [Authorize]
         [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CancelarReserva(int id)
         {
              await this.repo.CancelarReservaAsync(id);
@@ -75,7 +78,10 @@ namespace ApiNetTransportes.Controllers
         /// <response code="201">Created. Objeto correctamente creado en la BD.</response>        
         /// <response code="500">BBDD. No se ha creado el objeto en la BD. Error en la BBDD.</response>///     
         [HttpPost]
+        [Authorize]
         [Route("[action]")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<Reserva>> CrearReserva(ReservaModel reserva)
         {
             //recoge mediante Claims los datos del usuario 
@@ -106,6 +112,10 @@ namespace ApiNetTransportes.Controllers
         /// <response code="500">BBDD. No se ha eliminado el objeto en la BD. Error en la BBDD.</response>/// 
 
         [HttpDelete("{id}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteReserva(int id)
         {
             var reserva = await this.repo.FindReserva(id);
