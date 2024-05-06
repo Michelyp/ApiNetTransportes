@@ -57,7 +57,23 @@ namespace ApiNetTransportes.Controllers
             }
             return user;
         }
-
+        // GET: api/GetLoggedUsuario
+        /// <summary>
+        /// Devuelve el usuario logeado
+        /// </summary>
+        /// <response code="200">Devuelve el usuario</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
+        [HttpGet]
+        [Route("[action]")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<Usuario>> GetUsuario()
+        {
+            string jsonUsuario = HttpContext.User.FindFirst(x => x.Type == "UserData").Value;
+            Usuario usuario = JsonConvert.DeserializeObject<Usuario>(jsonUsuario);
+            return usuario;
+        }
         // PUT: api/usuarios
         /// <summary>
         /// Modifica una USUARIOS en la BBDD mediante su ID, tabla USUARIOS
@@ -115,16 +131,21 @@ namespace ApiNetTransportes.Controllers
         [Authorize]
         [Route("[action]")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<Usuario> PerfilUsuario()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Usuario>> PerfilUsuario()
         {
             //recoge mediante Claims los datos del usuario 
-            Claim claimUser = HttpContext.User.Claims
-                .SingleOrDefault(x => x.Type == "UserData");
-            string jsonUser = claimUser.Value;
-            Usuario user = JsonConvert.DeserializeObject<Usuario>(jsonUser);
-            int idUser = user.IdUsuario;
-            Usuario userValid = await this.repo.FindUsuario(idUser);
-            return userValid;
+            //Claim claimUser = HttpContext.User.Claims.SingleOrDefault(x => x.Type == "UserData");
+            //string jsonUser = claimUser.Value;
+            //Usuario user = JsonConvert.DeserializeObject<Usuario>(jsonUser);
+            //return user;
+            Claim claim = HttpContext.User.Claims.                                                                                                                                                                                                             
+                SingleOrDefault(x => x.Type == "UserData");
+            //RECUPERAMOS EL JSON DEL EMPLEADO
+            string jsonUser = claim.Value;
+            Usuario usuario =
+                JsonConvert.DeserializeObject<Usuario>(jsonUser);
+            return usuario;
         }
 
     }

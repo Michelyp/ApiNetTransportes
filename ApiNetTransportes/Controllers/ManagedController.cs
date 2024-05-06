@@ -51,7 +51,7 @@ namespace ApiNetTransportes.Controllers
                 string jsonUser = JsonConvert.SerializeObject(user);
                 Claim[] infoUsuario = new[]
                 {
-                    new Claim("UsuarioDatos", jsonUser)
+                    new Claim("UserData", jsonUser)
                 };
                 //Generamos el token 
                 //Este token tendra el issuer, audience,tiempo y otros

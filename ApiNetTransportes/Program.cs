@@ -17,14 +17,16 @@ builder.Services.AddTransient<RepositoryCoches>();
 builder.Services.AddTransient<HelperUploadFiles>();
 builder.Services.AddTransient<HelperPathProvider>();
 builder.Services.AddDbContext<TransportesContext>(options=> options.UseSqlServer(connectionString));
-//builder.Services.AddControllers();
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 // REGISTRAMOS SWAGGER COMO SERVICIO
+
+
 builder.Services.AddOpenApiDocument(document =>
 {
-    document.Title = "Api TechRiders";
-    document.Description = "Api TechRiders.  Proyecto Alumnos 2023";
+    document.Title = "Api Transportes";
+    document.Description = "Api Proyecto transportes";
     // CONFIGURAMOS LA SEGURIDAD JWT PARA SWAGGER,
     // PERMITE AÑADIR EL TOKEN JWT A LA CABECERA.
     document.AddSecurity("JWT", Enumerable.Empty<string>(),
@@ -44,9 +46,9 @@ builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
-HelperToken helper = new HelperToken(builder.Configuration);
+HelperToken helper =   new HelperToken(builder.Configuration);
 builder.Services.AddAuthentication(helper.GetAuthOptions()).AddJwtBearer(helper.GetJwtOptions());
-builder.Services.AddTransient<HelperToken>(x => helper);
+builder.Services.AddSingleton<HelperToken>(helper);
 builder.Services.AddControllers();
 var app = builder.Build();
 //app.UseProblemDetails();
