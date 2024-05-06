@@ -10,18 +10,18 @@ namespace ApiNetTransportes.Helpers
     {
         public String Issuer { get; set; }
         public String Audience { get; set; }
-        public String Secretkey { get; set; }
+        public String SecretKey { get; set; }
 
         public HelperToken(IConfiguration configuration) {
             this.Issuer = configuration["ApiAuth:Issuer"];
             this.Audience = configuration["ApiAuth:Audience"];
-            this.Secretkey = configuration["ApiAuth:SecretKey"];
+            this.SecretKey = configuration["ApiAuth:SecretKey"];
         }
         //Método privado para generar una clave
         //simétrica a partir de nuestro secretkey
         public SymmetricSecurityKey GetKeyToken()
         {
-            byte[] data = Encoding.UTF8.GetBytes(this.Secretkey);
+            byte[] data = Encoding.UTF8.GetBytes(this.SecretKey);
             return new SymmetricSecurityKey(data);
         }
         //Método para configurar las opciones de seguridad del token
@@ -34,7 +34,7 @@ namespace ApiNetTransportes.Helpers
                     options.TokenValidationParameters =
                     new TokenValidationParameters()
                     {
-                        ValidateActor = true,
+                        ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
@@ -51,9 +51,9 @@ namespace ApiNetTransportes.Helpers
             Action<AuthenticationOptions> authoptions =
                 new Action<AuthenticationOptions>(options =>
                 {
-                    options.DefaultAuthenticateScheme =
-                    JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultScheme =
+                    JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme =
                     JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme =
                     JwtBearerDefaults.AuthenticationScheme;
@@ -61,20 +61,6 @@ namespace ApiNetTransportes.Helpers
             return authoptions;
         }
 
-        //METODO PARA VALIDAR LA AUTENTIFICACION
-        public Action<AuthenticationOptions> GetAuthOptions()
-        {
-            Action<AuthenticationOptions> authoptions =
-                new Action<AuthenticationOptions>(options =>
-                {
-                    options.DefaultAuthenticateScheme
-                    = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme =
-                    JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme =
-                    JwtBearerDefaults.AuthenticationScheme;
-                });
-            return authoptions;
-        }
+     
     }
 }

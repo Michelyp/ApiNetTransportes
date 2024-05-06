@@ -38,7 +38,7 @@ namespace ApiNetTransportes.Controllers
         [Route("[action]")]
         public async Task<ActionResult> Login(LoginModel model )
         {
-            Usuario user = await this.repo.LoginUserAsync(model.Email, model.Password);
+            Usuario user = await this.repo.LoginUserAsync(model.UserName, model.Password);
             if (user == null)
             {
                 return Unauthorized();

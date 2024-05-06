@@ -41,13 +41,10 @@ builder.Services.AddOpenApiDocument(document =>
     document.OperationProcessors.Add(
     new AspNetCoreOperationSecurityScopeProcessor("JWT"));
 });
-builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
-{
-    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
-}));
+
 
 HelperToken helper =   new HelperToken(builder.Configuration);
-builder.Services.AddAuthentication(helper.GetAuthOptions()).AddJwtBearer(helper.GetJwtOptions());
+builder.Services.AddAuthentication(helper.GetAuthenticationOptions()).AddJwtBearer(helper.GetJwtOptions());
 builder.Services.AddSingleton<HelperToken>(helper);
 builder.Services.AddControllers();
 var app = builder.Build();
@@ -68,7 +65,6 @@ app.UseSwaggerUI(
         options.DocExpansion(DocExpansion.None);
     });
 
-app.UseCors("corsapp");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseStaticFiles();
