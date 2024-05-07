@@ -170,7 +170,8 @@ namespace ApiNetTransportes.Repositories
 
         public async Task<Usuario> FindUsuario(int id)
         {
-            return await this.context.Usuarios.Where(z => z.IdUsuario.Equals(id)).FirstOrDefaultAsync();
+         
+            return await this.context.Usuarios.FirstOrDefaultAsync(z => z.IdUsuario.Equals(id)); ;
         }
         #endregion
 
@@ -337,7 +338,7 @@ namespace ApiNetTransportes.Repositories
         }
         public async Task<ReservaVista> FindReserva(int id)
         {
-            return await this.context.ReservasVista.Where(z => z.IdReserva.Equals(id)).FirstOrDefaultAsync();
+            return await this.context.ReservasVista.FirstOrDefaultAsync(z => z.IdReserva.Equals(id));
         }
         public async Task<Reserva> FindReservaAsync(int id)
         {

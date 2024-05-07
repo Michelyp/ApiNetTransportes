@@ -61,6 +61,25 @@ namespace ApiNetTransportes.Controllers
         /// <summary>
         /// Devuelve el usuario logeado
         /// </summary>
+        /// <response code="200">Devuelve un usuario</response>
+        /// <response code="401">No autorizado. No se ha iniciado sesión</response>
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<Usuario>> FindUsuario(int id)
+        {
+            var user = await this.repo.FindUsuario(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return user;
+        }
+        // GET: api/GetLoggedUsuario
+        /// <summary>
+        /// Devuelve el usuario logeado
+        /// </summary>
         /// <response code="200">Devuelve el usuario</response>
         /// <response code="401">No autorizado. No se ha iniciado sesión</response>
         [HttpGet]

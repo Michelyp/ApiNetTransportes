@@ -42,7 +42,7 @@ namespace ApiNetTransportes.Controllers
         /// <response code="500">BBDD. No se ha creado el objeto en la BD. Error en la BBDD.</response>/// 
         [HttpPut]
         [Authorize]
-        [Route("[action]")]
+        [Route("[action]/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> CancelarReserva(int id)
         {
@@ -60,11 +60,27 @@ namespace ApiNetTransportes.Controllers
         /// <response code="200">OK. Devuelve el objeto solicitado.</response>        
         /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>        
         [HttpGet]
+        [Authorize]
         [Route("[action]/{nombre}")]
-        public async Task<ActionResult<List<ReservaVista>>>
-            FindReservasAsync(string nombre)
+        public async Task<ActionResult<List<ReservaVista>>>FindReservasAsync(string nombre)
         {
             return await this.repo.BuscadorReservas(nombre);
+        }
+        // GET: api/reservas/FindReservasAsync/{nombre}
+        /// <summary>
+        /// Obtiene conjunto de RESERVAVISTA , tabla RESERVAVISTA.
+        /// </summary>
+        /// <remarks>
+        /// Permite buscar un objeto RESERVAVISTA por NOMBRE.  Tabla Relacional RESERVAVISTA
+        /// </remarks>
+        /// <param name="nombre">Nombre del usuario de la reserva</param>
+        /// <response code="200">OK. Devuelve el objeto solicitado.</response>        
+        /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>        
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<ActionResult<Reserva>> FindReservasAsync(int id)
+        {
+            return await this.repo.FindReservaAsync(id);
         }
 
         // POST: api/reservas
