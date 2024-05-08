@@ -78,7 +78,7 @@ namespace ApiNetTransportes.Controllers
         /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>        
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Reserva>> FindReservasAsync(int id)
+        public async Task<ActionResult<ReservaVista>> FindReservasAsync(int id)
         {
             return await this.repo.FindReservaAsync(id);
         }

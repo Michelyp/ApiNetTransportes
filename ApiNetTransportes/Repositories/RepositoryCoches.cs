@@ -92,6 +92,7 @@ namespace ApiNetTransportes.Repositories
             List<Provincia> provincias = await this.context.Provincias.ToListAsync();
             return provincias;
         }
+       
         public async Task<List<CocheVista>> CochesDispo()
         {
             return await this.context.CocheVistas.Where(x => x.EstadoCoche == true).ToListAsync();
@@ -340,9 +341,9 @@ namespace ApiNetTransportes.Repositories
         {
             return await this.context.ReservasVista.FirstOrDefaultAsync(z => z.IdReserva.Equals(id));
         }
-        public async Task<Reserva> FindReservaAsync(int id)
+        public async Task<ReservaVista> FindReservaAsync(int id)
         {
-            return await this.context.Reservas.Where(z => z.IdReserva.Equals(id)).FirstOrDefaultAsync();
+            return await this.context.ReservasVista.Where(z => z.IdReserva.Equals(id)).FirstOrDefaultAsync();
         }
         public async Task CancelarReservaAsync(int id)
         {
