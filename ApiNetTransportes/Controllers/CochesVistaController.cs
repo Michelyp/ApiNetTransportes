@@ -24,7 +24,7 @@ namespace ApiNetTransportes.Controllers
         /// <response code="200">OK. Devuelve el objeto solicitado.</response>        
         /// <response code="404">NotFound. No se ha encontrado el objeto solicitado.</response>        
         [HttpGet]
-        [Route("[action]/({id})")]
+        [Route("[action]/{id}")]
         public async Task<ActionResult<CocheVista>> FindCocheVista(int id)
         {
             var coche = await this.repo.FindCocheVista(id);
