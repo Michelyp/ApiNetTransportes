@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using NSwag.Generation.Processors.Security;
 using NSwag;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.Extensions.Azure;
+using Azure.Security.KeyVault.Secrets;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +14,16 @@ var builder = WebApplication.CreateBuilder(args);
 //builder.Services.AddProblemDetails();
 
 // Add services to the container..
-string connectionString = builder.Configuration.GetConnectionString("SqlAzure");
+builder.Services.AddAzureClients(factory =>
+{
+    factory.AddSecretClient
+    (builder.Configuration.GetSection("KeyVault"));
+});
+SecretClient secretClient =
+builder.Services.BuildServiceProvider().GetService<SecretClient>();
+KeyVaultSecret secret =
+    await secretClient.GetSecretAsync("CONNECTIONSTRING");
+string connectionString = secret.Value;
 builder.Services.AddTransient<RepositoryCoches>();
 builder.Services.AddTransient<HelperUploadFiles>();
 builder.Services.AddTransient<HelperPathProvider>();
